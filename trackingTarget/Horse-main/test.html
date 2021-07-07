@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <title>Document</title>
+    <style>
+      #wrapper {
+        width: 100%;
+        height: 100vh;
+        position: relative;
+      }
+      .horse {
+        position: absolute;
+      }
+      .reverse {
+        transform: rotate(0deg);
+        -moz-transform: scaleX(-1);
+        -o-transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+        transform: scaleX(-1);
+        filter: FlipH;
+        -ms-filter: "FlipH";
+      }
+    </style>
+    <script>
+      // $( ".horse" ).switchClass( "none", "reverse", 1000, "easeInOutQuad" );
+      var option = {
+        startWidth: 400,
+        endWidth: 400,
+        startTop: 0,
+        endTop: 0,
+        duration: 100
+      }
+      var wrapperWidth;
+      // var endOfLeft = 
+      var animateStart = function () {
+		console.log(option);
+        $(".horse").addClass('reverse').stop().animate(
+          {
+            top: option.startTop + "%",
+            left: 0,
+            width: option.startWidth
+          },
+          parseInt(option.duration, 10),
+          function () {
+            $(".horse").removeClass('reverse').stop().animate(
+              {
+                top: option.endTop + "%",
+                left: (wrapperWidth-option.endWidth)+"px",
+                width: option.endWidth
+              },
+              parseInt(option.duration, 10),
+              animateStart
+            );
+          }
+        );
+      };
+
+      var setOptions = function() {
+        option.startWidth = $('.startWidth').val();
+        option.endWidth = $('.endWidth').val();
+        option.startTop = $('.startTop').val();
+        option.endTop = $('.endTop').val();
+        option.duration = $('.duration').val();
+        console.log(option)
+      }
+      $(document).ready(function() {
+        $("#start").click(function() {
+          setOptions();
+          // $('.horse').clearQueue();
+          $(animateStart)
+        });
+		
+		$(window).resize();
+      });
+	  $(window).resize(function() {
+        wrapperWidth = $("#wrapper").width();
+	  })
+    </script>
+  </head>
+  <body bgcolor=”#299D33">
+    <div>
+      <table>
+        <tr>
+          <td>시작 사이즈(px): </td>
+          <td><input class="startWidth" value="400"/></td>
+          <td>종료 사이즈(px): </td>
+          <td><input class="endWidth" value="400"/></td>
+          <td>시작 Top(%): </td>
+          <td><input class="startTop" value="0"/></td>
+          <td>종료 Top(%): </td>
+          <td><input class="endTop" value="0"/></td>
+          <td>속도(msec): </td>
+          <td><input class="duration" value="100"/></td>
+          <td colspan="2"><button id="start">Start</button></td>
+        </tr>
+      </table>
+    </div>
+    <div id="wrapper">
+      <img class="horse" src="horse.gif" />
+    </div>
+  </body>
+</html>
